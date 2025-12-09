@@ -1,0 +1,3 @@
+# Team settings
+approver=Eder, Noelle
+url=https://<portal-url-here>
