@@ -1,17 +1,31 @@
 @echo off
-echo ------ DEBUG MODE STARTED ------
-echo Script folder: "%~dp0"
 cd /d "%~dp0"
 
-echo.
-echo Checking Node path...
-where node
+echo ==============================
+echo AUTO APPROVER - STARTING
+echo Running in folder: %cd%
+echo ==============================
 echo.
 
-echo Running: node approve.js requests.csv
-echo ---------------------------------------
+:: Check if Node exists
+where node >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ❌ ERROR: Node.js is NOT installed or not in PATH.
+    echo Install from: https://nodejs.org
+    echo.
+    pause
+    exit /b
+)
+
+echo Node found:
+node -v
+echo.
+
+echo Running Approver Script...
+echo ------------------------------
 node approve.js requests.csv
+echo ------------------------------
 
-echo ---------------------------------------
-echo Script finished. Press any key to exit.
+echo.
+echo ✔ Script Finished.
 pause
