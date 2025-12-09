@@ -89,6 +89,7 @@ async function startBrowser() {
 }
 
 async function gotoHome(page) {
+  console.log("→ Opening:", cfg.urls.home);
   await page.goto(cfg.urls.home, { waitUntil: "domcontentloaded" });
   await page.waitForLoadState("networkidle").catch(() => {});
 }
@@ -102,6 +103,7 @@ async function safeScreenshot(page, suffix = "") {
       `${ts().replace(/[: ]/g, "")}${suffix}.png`
     );
     await page.screenshot({ path: file, fullPage: true });
+    console.log("Saved screenshot:", file);
     return file;
   } catch {
     return null;
@@ -130,8 +132,8 @@ async function switchUser(page, who) {
   await page.waitForSelector("text=Switch View").catch(() => {});
 
   const selectors = [
-    'div[role="option"]:has-text("' + who + '")',
-    'text="' + who + '"'
+    `div[role="option"]:has-text("${who}")`,
+    `text="${who}"`
   ];
 
   for (const sel of selectors) {
@@ -156,6 +158,8 @@ async function switchUser(page, who) {
 
 async function findSearchInput(page) {
   const sels = [
+    'input[placeholder*="Search by request ID"]',
+    'input[placeholder*="Search by request"]',
     'input[placeholder*="Search"]',
     'input[placeholder]'
   ];
@@ -221,39 +225,65 @@ async function approveOneInUser(page, id) {
   const input = await findSearchInput(page);
   await fillSearch(page, input, id);
 
-  // NEW WAIT (per settings.txt)
+  // wait after search before we start checking for the row
   await sleep(cfg.timing.afterSearchWait);
 
   const found = await waitForResult(page, id);
   if (!found) {
-    console.log(`✗ Not found`);
+    console.log(`✗ Not found for this approver`);
     return false;
   }
 
   console.log(`✓ Found, clicking Approve...`);
   const ok = await clickApproveButton(page);
-  if (!ok) return false;
+  if (!ok) {
+    console.log("✗ Could not click Approve button");
+    return false;
+  }
 
   await sleep(cfg.timing.afterApproveWait);
-  console.log(`✓ Approved ${id}`);
+  console.log(
+    `✓ Approved ${id} (waited ~${cfg.timing.afterApproveWait / 1000}s)`
+  );
   return true;
 }
 
-// -------- MAIN LOOP --------
+// -------- MAIN LOOP WITH PROGRESS COUNTER --------
 
 async function approveInUser(page, ids, userLabel, logPath) {
-  const remaining = [];
+  const total = ids.length;
+  let approvedCount = 0;
+  let processedCount = 0;
+  const remainingNotFound = [];
+
+  console.log(`\n===== Approving as ${userLabel} =====`);
+  console.log(`Total requests: ${total}\n`);
 
   for (const id of ids) {
+    processedCount++;
+
     const ok = await approveOneInUser(page, id);
     if (ok) {
-      appendLog(logPath, `${ts()},${id},approved,approved in ${userLabel}\n`);
+      approvedCount++;
+      appendLog(
+        logPath,
+        `${ts()},${id},approved,approved in ${userLabel}\n`
+      );
     } else {
-      remaining.push(id);
+      remainingNotFound.push(id);
     }
+
+    const remaining = total - processedCount;
+    console.log(
+      `Progress → Approved: ${approvedCount}/${total} | Remaining to process: ${remaining}`
+    );
   }
 
-  return remaining;
+  console.log(
+    `\nFinished for ${userLabel}. Approved: ${approvedCount}, Not found / failed: ${remainingNotFound.length}`
+  );
+
+  return remainingNotFound;
 }
 
 // -------- MAIN --------
@@ -288,7 +318,10 @@ async function main() {
     );
 
     for (const id of remaining) {
-      appendLog(logPath, `${ts()},${id},not_found,not found for approver\n`);
+      appendLog(
+        logPath,
+        `${ts()},${id},not_found,not found for approver view\n`
+      );
     }
 
     console.log("\nDONE. Log:", logPath);
