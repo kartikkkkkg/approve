@@ -1,0 +1,32 @@
+// close-edge.js
+// Small trial script to close all Edge windows on Windows
+
+import { exec } from "child_process";
+
+// Wrap taskkill in a Promise
+function closeAllEdge() {
+  return new Promise((resolve) => {
+    console.log("→ Trying to close all Microsoft Edge windows...");
+
+    // /IM msedge.exe = target process name
+    // /F = force close
+    exec('taskkill /IM msedge.exe /F', (error, stdout, stderr) => {
+      if (error) {
+        console.warn("⚠ taskkill error (maybe no Edge running or blocked by policy):");
+        console.warn(error.message);
+      } else {
+        if (stdout.trim()) console.log(stdout.trim());
+        if (stderr.trim()) console.log(stderr.trim());
+      }
+      console.log("→ Done attempting to close Edge.");
+      resolve();
+    });
+  });
+}
+
+async function main() {
+  await closeAllEdge();
+  console.log("✅ close-edge.js finished. You can now run approve.js.");
+}
+
+main().catch((e) => console.error("unhandled:", e));
