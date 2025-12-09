@@ -1,10 +1,30 @@
-# Team settings
+# -----------------------------
+# TEAM SETTINGS
+# -----------------------------
+
+# Approver name EXACTLY as shown in Switch View
 approver=Eder, Noelle
+
+# Portal home URL for this team
 url=https://<portal-url-here>
 
-# Optional timing overrides (in milliseconds)
-afterApproveWait=18000
-afterSearchWait=4000
 
-# Windows username (optional override)
-edgeProfileUser=2031146
+# -----------------------------
+# TIMING SETTINGS (ms)
+# Adjust these based on laptop speed / internet
+# -----------------------------
+
+# 1) Wait after loading homepage before reading user name
+initialPageWait=5000
+
+# 2) Wait BEFORE opening the Switch View dropdown
+waitBeforeSwitch=2000
+
+# 3) Wait AFTER clicking Switch to load new view
+waitAfterSwitch=6000
+
+# 4) Wait AFTER searching an ID before checking results
+waitAfterSearch=2500
+
+# 5) Wait AFTER clicking the blue Approve button
+afterApproveWait=18000
