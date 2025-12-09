@@ -1,0 +1,198 @@
+===============================
+WFM AUTO-APPROVER – USER GUIDE
+===============================
+
+This guide explains how to set up and run the auto-approver tool
+for FIRST-TIME USERS and DAILY USERS.
+
+Required files:
+    approve.js
+    edge.js             ← auto-closes Microsoft Edge
+    utils.js
+    config.js
+    settings.txt
+    requests.csv
+    logs/
+    logs/errors/
+
+────────────────────────────────────────
+1. FIRST-TIME SETUP (DO THIS ONCE)
+────────────────────────────────────────
+
+STEP 1 — Install Node.js v20+
+--------------------------------
+Node.js must be installed through your company’s MyIT portal.
+
+1. Open MyIT Portal  
+2. Search: “Node.js 20”  
+3. Raise the request → wait for installation approval  
+
+Verify installation:
+
+    node -v
+
+Expected output: v20.x.x or higher
+
+
+STEP 2 — Extract the Folder
+----------------------------
+Download the ZIP provided → extract it to Desktop.
+
+You should see:
+
+    approve.js
+    edge.js
+    utils.js
+    config.js
+    settings.txt
+    requests.csv
+    logs/
+    logs/errors/
+
+
+STEP 3 — Install Playwright (ONE TIME ONLY)
+--------------------------------------------
+Inside the folder → Shift + Right-Click → **Open PowerShell Window Here**
+
+Run:
+
+    npm install playwright
+
+This enables the script to automate Microsoft Edge.
+
+
+STEP 4 — Configure settings.txt
+--------------------------------
+Open settings.txt:
+
+    approver=Eder, Noelle
+    url=https://<wfm-portal-url>
+    edgeProfileUser=<your-windows-username>
+
+    # timing (ms)
+    pageLoadWait=5000
+    switchRetryWait=2000
+    afterSearchWait=1200
+    afterApproveWait=18000
+
+Change:
+
+• approver → name to approve as  
+• url → your **WFM portal home page**  
+• edgeProfileUser → Windows login ID (same as your profile folder name)  
+• timing → adjust based on laptop speed  
+
+
+STEP 5 — Ensure Microsoft Edge is CLOSED
+-----------------------------------------
+Before running automation:
+
+1. Close all Edge windows  
+2. If needed → open Task Manager → end **all msedge.exe** processes  
+
+edge.js will kill them too, but clean start is best.
+
+
+────────────────────────────────────────
+2. DAILY USAGE (EVERY TIME YOU APPROVE)
+────────────────────────────────────────
+
+STEP 1 — Update requests.csv
+------------------------------
+Add request IDs:
+
+    12345678
+    12345679
+    12345680
+
+
+STEP 2 — Run the script
+-------------------------
+Inside the folder → Shift + Right-Click → Open PowerShell Here.
+
+Run:
+
+    node edge.js && node approve.js requests.csv
+
+This does:
+
+• edge.js — closes any leftover Microsoft Edge instances  
+• approve.js — starts automation and approvals  
+
+
+STEP 3 — Watch progress
+------------------------
+The script prints:
+
+    Approver: Eder, Noelle
+    1/42 → Approved
+    2/42 → Approved
+    3/42 → Not found
+    ...
+
+Logs saved in:
+
+    logs/run-YYYYMMDD_HHMMSS.csv
+
+
+────────────────────────────────────────
+3. TIMING SETTINGS (ADJUST BASED ON LAPTOP/INTERNET SPEED)
+────────────────────────────────────────
+
+Modify values in settings.txt:
+
+• pageLoadWait  
+    How long to wait after opening the website  
+    Default: 5000  
+    Slow laptops: 8000–12000  
+
+• switchRetryWait  
+    Delay inside Switch View dialog  
+    Default: 2000  
+    Slow users: 4000–7000  
+
+• afterSearchWait  
+    Delay after pressing Search  
+    Default: 1200  
+    Slow users: 2000–3500  
+
+• afterApproveWait  
+    Wait after clicking Approve  
+    Default: 18000  
+    DO NOT reduce below 12000  
+
+
+────────────────────────────────────────
+4. TROUBLESHOOTING
+────────────────────────────────────────
+
+✓ Script stuck on Switch View  
+→ Increase pageLoadWait + switchRetryWait
+
+✓ Search cannot find request  
+→ Increase afterSearchWait  
+→ Ensure request exists for that approver
+
+✓ Already approved request showing “not found”  
+→ Normal — approved items disappear from WFM portal
+
+✓ Edge opens in InPrivate mode  
+→ Wrong or missing:
+       edgeProfileUser=<yourWindowsUsername>
+
+✓ Script doesn’t run  
+→ Make sure:
+       npm install playwright
+  was run once during setup
+
+
+────────────────────────────────────────
+5. SUPPORT / ESCALATION
+────────────────────────────────────────
+
+For issues or enhancements → contact your **local WFM SPOC**.  
+Do NOT share this globally without approval.
+
+────────────────────────────────────────
+END OF GUIDE
+────────────────────────────────────────
