@@ -1,3 +1,10 @@
 # Team settings
 approver=Eder, Noelle
 url=https://<portal-url-here>
+
+# Optional timing overrides (in milliseconds)
+afterApproveWait=18000
+afterSearchWait=4000
+
+# Windows username (optional override)
+edgeProfileUser=2031146
