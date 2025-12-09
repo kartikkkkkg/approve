@@ -2,29 +2,36 @@
 # TEAM SETTINGS
 # -----------------------------
 
-# Approver name EXACTLY as shown in Switch View
+# Approver name EXACTLY as in Switch View
 approver=Eder, Noelle
 
 # Portal home URL for this team
 url=https://<portal-url-here>
 
+# Windows username (used for Edge profile path)
+edgeProfileUser=2031146
+
 
 # -----------------------------
 # TIMING SETTINGS (ms)
-# Adjust these based on laptop speed / internet
+# All are OPTIONAL. If missing, script uses old defaults.
 # -----------------------------
 
-# 1) Wait after loading homepage before reading user name
-initialPageWait=5000
+# 1) Extra wait after opening the homepage
+#    (0 = behave like old script)
+initialPageWait=0
 
-# 2) Wait BEFORE opening the Switch View dropdown
-waitBeforeSwitch=2000
+# 2) Wait BEFORE opening Switch View dialog
+waitBeforeSwitch=0
 
-# 3) Wait AFTER clicking Switch to load new view
-waitAfterSwitch=6000
+# 3) Wait AFTER clicking "Switch" (for new view to load)
+#    Old hardcoded behavior was ~600 ms
+waitAfterSwitch=600
 
-# 4) Wait AFTER searching an ID before checking results
-waitAfterSearch=2500
+# 4) Max wait AFTER searching an ID for result to appear
+#    Old behavior: 40000 (40s)
+waitAfterSearch=40000
 
 # 5) Wait AFTER clicking the blue Approve button
+#    Old behavior: 18000 (18s)
 afterApproveWait=18000
