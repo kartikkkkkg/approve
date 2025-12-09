@@ -1,40 +1,29 @@
-// config.js – minimal base config (everything else is overridden by settings.txt)
+import { loadSettings } from "./utils.js";
+
+const s = loadSettings();
 
 export const cfg = {
   urls: {
-    home: ""   // replaced by settings.txt → url=<...>
-  },
-
-  sel: {
-    // SWITCH USER
-    switchLink: "text=Switch",
-    switchDialogTitle: "Switch View",
-    switchOption: (who) => `text="${who}"`,
-    switchConfirm: 'button:has-text("Switch")',
-
-    // SEARCH INPUT
-    searchInput: 'input[placeholder*="Search"]',
-    searchBtn: 'button:has(svg)',
-
-    // ROWS (not used but kept)
-    rowById: (id) => `tr:has(a:has-text("${id}")), li:has-text("${id}")`,
-    rowCheckbox: (id) =>
-      `tr:has(a:has-text("${id}")) input[type="checkbox"], li:has-text("${id}") input[type="checkbox"]`,
-
-    // APPROVE BUTTON (blue ✔)
-    bulkApproveBtn: 'button:has-text("Approve")',
-    approveConfirmBtn: 'button:has-text("Confirm")',
-    successToast: 'div[role="status"], div.toast-success, text=successfully'
+    home: s.url || "https://<default-url>"
   },
 
   users: {
-    approver: ""   // replaced by settings.txt → approver=<...>
+    approver: s.approver || "Eder, Noelle"
   },
 
   timing: {
-    afterApproveWait: 18000,
-    afterSearchWait: 4000
+    initialPageWait: Number(s.initialPageWait || 5000),
+    waitBeforeSwitch: Number(s.waitBeforeSwitch || 2000),
+    waitAfterSwitch: Number(s.waitAfterSwitch || 6000),
+    waitAfterSearch: Number(s.waitAfterSearch || 2500),
+    afterApproveWait: Number(s.afterApproveWait || 18000)
   },
 
-  edgeProfileUser: ""  // replaced by settings.txt → edgeProfileUser=<...>
+  sel: {
+    switchLink: "text=Switch",
+    switchConfirm: 'button:has-text("Switch")',
+    searchBtn: "button:has(svg)"
+  },
+
+  edgeProfileUser: "2031146"
 };
