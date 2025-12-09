@@ -1,28 +1,18 @@
 @echo off
-echo Starting Approver Automation...
+echo Starting Approver Tool...
 echo.
 
-REM Use this folder as working directory
+rem Go to the folder where this BAT file is located
 cd /d "%~dp0"
 
-REM Show Node version (debugging)
-node -v
-if errorlevel 1 (
-    echo ERROR: Node.js is not installed!
-    echo Download from: https://nodejs.org/
-    pause
-    exit /b
-)
-
-echo Running approve.js...
+rem (Optional) Show node path
+echo Using Node:
+where node
 echo.
 
-REM Run script with requests.csv
+rem Run the script
 node approve.js requests.csv
 
 echo.
-echo -------------------------------
-echo Script finished.
-echo Press any key to close window.
-echo -------------------------------
-pause >nul
+echo Finished. Press any key to exit.
+pause
