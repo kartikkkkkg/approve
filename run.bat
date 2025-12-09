@@ -1,18 +1,17 @@
 @echo off
-echo Starting Approver Tool...
-echo.
-
-rem Go to the folder where this BAT file is located
+echo ------ DEBUG MODE STARTED ------
+echo Script folder: "%~dp0"
 cd /d "%~dp0"
 
-rem (Optional) Show node path
-echo Using Node:
+echo.
+echo Checking Node path...
 where node
 echo.
 
-rem Run the script
+echo Running: node approve.js requests.csv
+echo ---------------------------------------
 node approve.js requests.csv
 
-echo.
-echo Finished. Press any key to exit.
+echo ---------------------------------------
+echo Script finished. Press any key to exit.
 pause
